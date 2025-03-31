@@ -35,8 +35,6 @@ export const LoginUsecase = (repo: LoginRepository) => async (input: {
         throw new Error('invalid match'); // TODO: エラーの移譲 RESTへ渡す
     } // なんかうまくいかない
 
-
-
     const payload = {
         sub: account.id,
         email: account.email,
