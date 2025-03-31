@@ -1,6 +1,7 @@
 import { Account, createAccount } from "../../../domain/model/login";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { KeyRepository } from "../key/mod";
 
 const JWT_SECRET = 'secret';
 const ISSUER = 'https://your-custom-auth.com';
@@ -20,7 +21,7 @@ export const RegisterUsecase = (repo: LoginRepository) => async (acocunt: Accoun
     const new_account = await repo.post(account)
 }
 
-export const LoginUsecase = (repo: LoginRepository) => async (input: {
+export const LoginUsecase = (repo: LoginRepository, keyRepo: KeyRepository) => async (input: {
     email: string, password: string
 }) => {
     const account = await repo.get(input.email)
@@ -35,20 +36,22 @@ export const LoginUsecase = (repo: LoginRepository) => async (input: {
         throw new Error('invalid match'); // TODO: エラーの移譲 RESTへ渡す
     } // なんかうまくいかない
 
-
-
     const payload = {
         sub: account.id,
         email: account.email,
     };
 
-    const token = jwt.sign(payload, JWT_SECRET, {
-        algorithm: 'HS256',
-        expiresIn: '5m',
-        issuer: ISSUER,
-        audience: AUDIENCE,
-    });
-
-    return token
+    try {
+        const jwt_key = await keyRepo.get()
+        const token = jwt.sign(payload, jwt_key.privateKey, {
+            algorithm: 'RS256',
+            expiresIn: '5m',
+            issuer: 'https://auth.local',
+            keyid: jwt_key.kid
+          });
+        return token
+    } catch (err) {
+        throw Error("error...")
+    }
 }
 

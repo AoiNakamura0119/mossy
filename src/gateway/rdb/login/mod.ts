@@ -14,7 +14,6 @@ export const loginRepositoryPrisma: LoginRepository = {
             throw new Error('invalid'); // TODO: エラーの移譲 RESTへ渡す
         }
         const passwordHash = await bcrypt.hash(account.password, 10);
-        console.log("passwordHash:", passwordHash)
         const newAccount = await prisma.account.create({
             data: {
                 id: account.id,
