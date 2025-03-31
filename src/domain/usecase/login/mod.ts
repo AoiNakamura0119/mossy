@@ -12,13 +12,15 @@ export interface LoginRepository {
     post(account: Account): Promise<Account>;
 }
 
-export const RegisterUsecase = (repo: LoginRepository) => async (acocunt: Account) => {
+export const RegisterUsecase = (repo: LoginRepository) => async (acocunt: Account): Promise<Account> => {
     const exist = await repo.get(acocunt.email)
     if (exist) {
         throw new Error('invalid'); // TODO: エラーの移譲 RESTへ渡す
     }
     const account = await createAccount(acocunt.email, acocunt.password)
+    console.log("account")
     const new_account = await repo.post(account)
+    return new_account
 }
 
 export const LoginUsecase = (repo: LoginRepository, keyRepo: KeyRepository) => async (input: {
@@ -45,7 +47,7 @@ export const LoginUsecase = (repo: LoginRepository, keyRepo: KeyRepository) => a
         const jwt_key = await keyRepo.get()
         const token = jwt.sign(payload, jwt_key.privateKey, {
             algorithm: 'RS256',
-            expiresIn: '5m',
+            expiresIn: '1h',
             issuer: 'https://auth.local',
             keyid: jwt_key.kid
           });

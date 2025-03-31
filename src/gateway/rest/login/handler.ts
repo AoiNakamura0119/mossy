@@ -8,6 +8,7 @@ export const LoginHandler = {
     post: async (req: any, res: any) => {
         console.log(req.body)
         try {
+            console.log("認証サーバアクセス!")
             const jwt = await login(req.body);
             res.status(201).json(jwt);
         } catch (e: any) {

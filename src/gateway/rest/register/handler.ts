@@ -9,8 +9,10 @@ export const RegisterHandler = {
         console.log(req.body)
         try {
             const user = await register(req.body);
-            res.status(204).json(user);
+            console.log("user:", user)
+            res.status(200).json(user);
         } catch (e: any) {
+            console.log("errorrrorrrororororrr")
             res.status(400).json({ error: e.message });
         }
     },
