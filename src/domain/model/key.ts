@@ -3,3 +3,5 @@ export type Key = {
     privateKey: string,
     publicKey: string
 }
+
+export type JwtKey = Omit<Key, 'publicKey'>;

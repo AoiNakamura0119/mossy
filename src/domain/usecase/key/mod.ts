@@ -1,8 +1,9 @@
 import { generateKeyPairSync } from 'crypto';
-import { Key } from '../../model/key';
+import { JwtKey, Key } from '../../model/key';
 
 
 export interface KeyRepository {
+    get(): Promise<JwtKey>
     post(key: Key): Promise<void>
 }
 
