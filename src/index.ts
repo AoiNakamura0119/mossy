@@ -14,6 +14,7 @@ app.post('/login', LoginHandler.post)
 app.post('/register', RegisterHandler.post)
 
 app.post('/keys', KeysHandler.post)
+app.get('/pubkey', KeysHandler.get)
 
 
 app.listen(port, () => {
