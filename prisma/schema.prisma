@@ -1,0 +1,17 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // ← 他には "mysql", "sqlite" などもあり
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   // ハッシュ化されたパスワード
+
+  @@map("accounts") // DB上のテーブル名を明示
+}
